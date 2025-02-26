@@ -14,7 +14,7 @@
           <label for="{key}" class="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-slate-800 cursor-pointer">
           </label>
         </div>
-       
         <label for="{key}" class="text-white text-sm cursor-pointer">{label}</label>
+       
       </div>
 </div>
