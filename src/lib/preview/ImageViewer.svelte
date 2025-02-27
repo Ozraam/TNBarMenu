@@ -6,4 +6,4 @@
     } = $props();
 </script>
 
-<img src="{src}" alt="{alt}" class="{classes} max-h-full rounded-lg" />
+<img src="{src}" alt="{alt}" class="xl:max-h-full rounded-lg {classes}" />

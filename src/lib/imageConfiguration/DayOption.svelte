@@ -1,10 +1,5 @@
 <script lang="ts">
-	import SwitchToggle from './simpleComponent/SwitchToggle.svelte';
-	import Checkbox from './simpleComponent/Checkbox.svelte';
-
-	import type { DayOptions } from './type';
-	import Select from './simpleComponent/Select.svelte';
-	import Textarea from './simpleComponent/Textarea.svelte';
+	import type { DayOptions } from '../type';
 	import SpaceConfiguration from './SpaceConfiguration.svelte';
 
 	const {

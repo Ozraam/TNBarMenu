@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Checkbox from "./simpleComponent/Checkbox.svelte";
-	import Select from "./simpleComponent/Select.svelte";
-	import SwitchToggle from "./simpleComponent/SwitchToggle.svelte";
-	import Textarea from "./simpleComponent/Textarea.svelte";
-	import type { DayOptions } from "./type";
+	import Checkbox from "$lib/simpleComponent/Checkbox.svelte";
+	import Select from "$lib/simpleComponent/Select.svelte";
+	import SwitchToggle from "$lib/simpleComponent/SwitchToggle.svelte";
+	import Textarea from "$lib/simpleComponent/Textarea.svelte";
+	import type { DayOptions } from "$lib/type";
 
     let {
         label,

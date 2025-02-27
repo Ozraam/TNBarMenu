@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { classList } from "$lib/classList";
-    import OptionSelector from "$lib/OptionSelector.svelte";
+    import OptionSelector from "$lib/imageConfiguration/OptionSelector.svelte";
+	import LoadingModal from "$lib/LoadingModal.svelte";
     import ImageViewer from "$lib/preview/ImageViewer.svelte";
     import TextPreview from "$lib/preview/TextPreview.svelte";
+
+    let customOpen = $state(true);
+
+    let customClass = $derived(customOpen ? "p-3 h-full" : "h-8 p-0 overflow-hidden")
 </script>
 
 <svelte:body use:classList={["h-screen", "flex", "flex-col", "bg-linear-to-bl", "from-orange-800", "to-blue-600", "text-white", "overflow-hidden", "p-3", "gap-3"]} />
@@ -28,15 +33,29 @@
     </nav>
 </header>
 
-<main class="flex h-full flex-1 gap-3 justify-evenly overflow-hidden">
-    <OptionSelector class="overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full" />
+<main class="flex h-full flex-1 gap-3 justify-evenly overflow-hidden flex-col xl:flex-row">
+    <OptionSelector 
+        class="transition-all xl:p-3 xl:h-auto xl:max-h-full overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full {customClass}"
+        onclick={() => customOpen = false}
+        >
+        <div class="w-full xl:hidden">
+            <button class="w-full cursor-pointer" onclick="{() => customOpen = !customOpen}">
+                {customOpen ? "Close" : "Open"}
+            </button>
+        </div>
+    </OptionSelector>
 
-    <ImageViewer src="https://placehold.co/1080x1920" alt="un placeholder" />
+    <div class="flex gap-3 rounded-lg flex-1 md:flex-row flex-col w-full overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <ImageViewer src="https://placehold.co/1080x1920" alt="un placeholder" />
 
-    <div class="flex-1 flex flex-col gap-3">
+        <div class="flex flex-1 flex-col gap-3 md:overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full">
 
-        <ImageViewer src="https://placehold.co/1920x1080" alt="placeholder" />
+            <ImageViewer src="https://placehold.co/1920x1080" alt="placeholder"/>
 
-        <TextPreview class="flex-1" text="Tet$§"/>
+            <TextPreview class="flex-1" text="Tet$§"/>
+        </div>
     </div>
+
+    <LoadingModal />
 </main>
+
