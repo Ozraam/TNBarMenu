@@ -82,9 +82,10 @@
         </div>
     </OptionSelector>
 
-    <div class="flex gap-3 rounded-lg flex-1 md:flex-row flex-col w-full overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full">
-        <ImageViewer name="vertical" bind:this={verticalImage} aspectRatio="aspect-1080/1920" skeleton={loadingState.loading} src="http://localhost:5000/verticalMenu" alt="un placeholder" />
-
+    <div class="flex gap-3 lg:max-h-full rounded-lg flex-1 md:flex-row flex-col w-full overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full">
+        
+            <ImageViewer name="vertical" bind:this={verticalImage} aspectRatio="aspect-1080/1920" skeleton={loadingState.loading} src="http://localhost:5000/verticalMenu" alt="un placeholder" />
+        
         <div class="flex flex-1 flex-col gap-3 md:overflow-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-linear-to-bl [&::-webkit-scrollbar-thumb]:from-amber-700 [&::-webkit-scrollbar-thumb]:to-orange-600 [&::-webkit-scrollbar-thumb]:rounded-full">
 
             <ImageViewer name="horizontal" bind:this={horizontalImage} src="http://localhost:5000/horizontalMenu" alt="placeholder" skeleton={loadingState.loading}/>
