@@ -72,7 +72,7 @@
             method: "GET",
         }).then((data) => {
                 if (data.ok) {
-                    loadingState.loading = false;
+                    // loadingState.loading = false;
                     imageGeneratedCallback();
                 } else {
                     loadingState.loading = false;

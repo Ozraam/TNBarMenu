@@ -21,9 +21,6 @@
             image: string;
         }[];
     }= $props();
-
-    $inspect(space);
-    
 </script>
 
 <div class="{classes}">
