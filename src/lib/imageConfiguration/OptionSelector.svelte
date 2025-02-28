@@ -3,8 +3,9 @@
     import DayOption from "./DayOption.svelte";
 	import type { DayOptions } from "../type";
     import { loadingState } from "$lib/loadingState.svelte";
+	import { onMount } from "svelte";
 
-    const { class: class_ = "", children, onclick = () => {}} = $props();
+    const { class: class_ = "", children, onclick = () => {}, imageGeneratedCallback = () => {}} = $props();
 
     const weekOption : {label: string, space: DayOptions[]}[] = $state(["lundi", "mardi", "mercredi", "jeudi", "vendredi", "pub"].map((day) => {        
         return {
@@ -14,11 +15,73 @@
                     is_used: false,
                     is_meal: true,
                     text: "",
-                    meal: ""
+                    meal: undefined,
                 };
             }),
         };
     }));
+
+    const customTextFrench = "Voici le menu de cette semaine !"
+    const customTextEnglish = "Here is the menu for this week!"
+
+    let mealList : {
+        name: string;
+        image: string;
+    }[] = $state([]);
+
+    onMount(() => {
+        fetch("http://localhost:5000/getMealList", {
+            method: "GET",
+        }).then((data) => {
+                if (data.ok) {
+                    data.json().then((mealListAPI) => {
+                        mealList = mealListAPI;
+                    });
+                } else {
+                    alert("An error occured");
+                }
+            }
+        );
+    });
+
+    function getMealText(meal: string) {
+        return mealList.find((mealOption: any) => mealOption.image === meal)?.name || "";
+    }
+
+    function weekOptionToCLI() {
+        let cli = `--header ${weekOption.map((day) => {
+            return day.label
+        }).join(" ")} --custom-text-french "${customTextFrench}" --custom-text-english "${customTextEnglish}" `;
+        
+        cli += weekOption.map((day) => {
+            let dayCLI = `--content --day ${day.label} --day-content ${day.space.filter(
+                space => space.is_used
+            ).map((space) => {
+                return `${space.is_meal ? "--is-meal " : ""}--text "${space.is_meal ? getMealText(space.meal!) : space.text}" ${space.is_meal ? `--img ${space.meal} ` : ""}`.trim();
+            }).filter(s => s.length != 0).join(" ")}`.trim();
+
+            return dayCLI;
+        }).join(" ");
+
+        return cli;
+    }
+
+    function generateImage() {
+        let cli = weekOptionToCLI();
+        fetch("http://localhost:5000/generateImages?menu="+cli, {
+            method: "GET",
+        }).then((data) => {
+                if (data.ok) {
+                    loadingState.loading = false;
+                    imageGeneratedCallback();
+                } else {
+                    loadingState.loading = false;
+                    alert("An error occured");
+                }
+            }
+        );
+        onclick();
+    }
 </script>
 
 <div class="bg-gray-600/20 rounded-lg bg-clip-padding backdrop-filter backdrop-blur-md border border-gray-100 {class_}">
@@ -34,7 +97,7 @@
     </div>
 
     {#each weekOption as dayOption, i}
-        <DayOption label={dayOption.label} key={dayOption.label} bind:space={dayOption.space} />
+        <DayOption label={dayOption.label} key={dayOption.label} bind:space={dayOption.space} {mealList} />
 
         {#if i < weekOption.length - 1}
             <div class="border-t border-white/25"></div>
@@ -44,7 +107,7 @@
     <button 
         onclick="{() => {
             loadingState.loading = true
-            onclick();
+            generateImage();
         }}"
         class="mt-3 mx-auto flex items-center rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" 
         type="button"

@@ -7,5 +7,5 @@ export type DayOptions = {
     is_used: boolean,
     is_meal: boolean,
     text: string,
-    meal: string,
+    meal: string | undefined,
 }

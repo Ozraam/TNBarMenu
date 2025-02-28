@@ -10,13 +10,20 @@
         key,
         space = $bindable(),
         class: classes = "",
+        mealList = []
     } : {
         label: string;
         key: string;
         space: DayOptions;
         class: string;
+        mealList: {
+            name: string;
+            image: string;
+        }[];
     }= $props();
 
+    $inspect(space);
+    
 </script>
 
 <div class="{classes}">
@@ -28,12 +35,17 @@
     />
     {#if space.is_used}
         <Checkbox label="Est un repas" key="{key}-meal" bind:checked={space.is_meal} />
-
+        
         {#if space.is_meal}
             <Select 
                 key="{key}-meal-select"
                 label="Repas"
-                options={[]}
+                options={mealList.map((meal) => {
+                    return {
+                        value: meal.image,
+                        label: meal.name
+                    };
+                })}
                 bind:selected={space.meal}
             />
         {:else}

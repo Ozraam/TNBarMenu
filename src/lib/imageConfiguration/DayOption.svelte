@@ -5,11 +5,16 @@
 	const {
 		label,
         key,
-		space = $bindable([])
+		space = $bindable([]),
+		mealList = [],
 	}: {
 		label: string;
         key: string;
 		space: DayOptions[];
+		mealList: {
+			name: string;
+			image: string;
+		}[];
 	} = $props();
 
 	$effect(() => {
@@ -23,8 +28,8 @@
 	<h3 class="capitalize font-bold text-lg">
 		{label}
 	</h3>
-	<SpaceConfiguration label="Utiliser l'emplacement haut" key="{key}-space-1" bind:space={space[0]} class="" />
+	<SpaceConfiguration label="Utiliser l'emplacement haut" key="{key}-space-1" bind:space={space[0]} class="" {mealList} />
 	{#if space[0].is_used}
-		<SpaceConfiguration label="Utiliser l'emplacement bas" key="{key}-space-2" bind:space={space[1]} class="mt-2" />
+		<SpaceConfiguration label="Utiliser l'emplacement bas" key="{key}-space-2" bind:space={space[1]} class="mt-2" {mealList} />
 	{/if}
 </div>

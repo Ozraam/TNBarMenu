@@ -4,7 +4,7 @@
         key = "select",
         label,
         options,
-        selected = $bindable(""),
+        selected = $bindable(),
     } : {
         key: string;
         label: string;
@@ -12,8 +12,10 @@
             value: string;
             label: string;
         }[];
-        selected: string;
+        selected: string | undefined;
     } = $props();
+
+	let selectedValue = $state();
 </script>
 
 <div class="w-full max-w-sm min-w-[200px]">
@@ -23,10 +25,10 @@
 		<select
             id="{key}"
             bind:value={selected}
-			class="ease w-full cursor-pointer appearance-none rounded border border-slate-200 bg-transparent py-2 pr-8 pl-3 text-sm text-slate-700 shadow-sm transition duration-300 placeholder:text-slate-400 hover:border-slate-400 focus:border-slate-400 focus:shadow-md focus:outline-none"
+			class="ease w-full cursor-pointer appearance-none rounded border border-slate-200 bg-transparent py-2 pr-8 pl-3 text-sm shadow-sm transition duration-300 placeholder:text-slate-400 hover:border-slate-400 focus:border-slate-400 focus:shadow-md focus:outline-none"
 		>
 			{#each options as { value, label }}
-                <option value="{value}">{label}</option>
+                <option class="text-slate-700" {value}>{label}</option>
             {/each}
 		</select>
 		<svg
@@ -44,4 +46,6 @@
 			/>
 		</svg>
 	</div>
+
+	{selectedValue}
 </div>
