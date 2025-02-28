@@ -7,7 +7,8 @@
 		alt,
 		skeleton = false,
 		class: classes = '',
-		aspectRatio = 'aspect-1920/1080'
+		aspectRatio = 'aspect-1920/1080',
+		name
 	} = $props();
 
 	let img: HTMLImageElement | null = $state(null);
@@ -27,27 +28,33 @@
 
 	export function getImage() {
 		isLoaded = false;
-		fetch(src)
-			.then((response) => {
-				if (response.ok) {
-					return response.blob();
-				}
-				throw new Error('Network response was not ok.');
-			})
-			.then((blob) => {
-				const url = URL.createObjectURL(blob);
+		// I don't know why, but this setTimeout is necessary to make the image update
+		// without it, the image will not update and stay as the old image
+		setTimeout(() => {
 				img = new Image();
-				img.src = url;
-			})
-			.catch((error) => {
-				console.error('There has been a problem with your fetch operation:', error);
-			});
+				img.src = src;
+		}, 0);
+	}
+
+	function saveToDisk() {
+		if (img) {
+			const link = document.createElement('a');
+			link.href = img.src;
+			link.download = name + '.png';
+			link.target = '_blank';
+			link.click();
+		}
 	}
 </script>
 
 {#if !skeleton}
-	<!-- <img {src} {alt} class="rounded-lg xl:max-h-full {classes}"  /> -->
-	<img src={img ? img.src : src} {onload} {alt} class="rounded-lg xl:max-h-full {classes} {!isLoaded ? "hidden" : ""}" />
+	<div class="relative overflow-hidden">
+		<img src={img ? img.src : src} {onload} {alt} class="peer rounded-lg xl:max-h-full {classes} {!isLoaded ? "hidden" : ""}" />
+
+		<button class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900 p-1 px-2 rounded-lg hover:translate-y-0 hover:bg-slate-800 cursor-pointer translate-y-15 transition peer-hover:translate-y-0" onclick={saveToDisk}>
+			Download
+		</button>
+	</div>
 {/if}
 {#if skeleton || !isLoaded}
 	<ImageSkeleton aspectratio={aspectRatio} />
