@@ -2,8 +2,9 @@
 	import WeekIndication from './WeekIndication.svelte';
 	import DayOption from './DayOption.svelte';
 	import type { DayOptions } from '../type';
-	import { loadingState } from '$lib/loadingState.svelte';
+	import { imgLinkState, loadingState } from '$lib/loadingState.svelte';
 	import { onMount } from 'svelte';
+	import { json } from '@sveltejs/kit';
 
 	const {
 		class: class_ = '',
@@ -122,9 +123,11 @@
 		let cli = weekOptionToCLI();
 		fetch('http://localhost:5000/generateImages?menu=' + cli, {
 			method: 'GET'
-		}).then((data) => {
+		}).then(async (data) => {
 			if (data.ok) {
-				// loadingState.loading = false;
+				const josn = await data.json()
+				imgLinkState.horizontal = josn.horizontal
+				imgLinkState.vertical = josn.vertical
 				imageGeneratedCallback();
 			} else {
 				loadingState.loading = false;
