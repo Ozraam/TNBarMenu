@@ -22,8 +22,6 @@ WORKDIR /app
 
 COPY --from=build /app/build .
 
-WORKDIR /app/build
-
 RUN bun install
 
 # Expose the port the app runs on

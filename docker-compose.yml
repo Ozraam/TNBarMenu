@@ -15,9 +15,6 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-    volumes:
-       - ./:/app
-       - /app/node_modules
     networks:
       - app-network
     healthcheck:
@@ -39,7 +36,7 @@ services:
     volumes:
       - ./MenuGeneratorBarbare:/app
       # Add a named volume for persistent storage
-      - backend-data:/app/data
+      - ./MenuGeneratorBarbare/build:/app/build
     networks:
       - app-network
     healthcheck:
