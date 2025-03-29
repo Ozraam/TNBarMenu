@@ -40,28 +40,9 @@
     }
 </script>
 
-<svelte:body use:classList={["h-screen", "flex", "flex-col", "bg-linear-to-bl", "from-orange-800", "to-blue-600", "text-white", "overflow-hidden", "p-3", "gap-3"]} />
 
 
-<header class="flex justify-between p-3 bg-gray-600/20 rounded-lg bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-20 border border-gray-100 to-">
-    <h1>
-        Menu
-    </h1>
 
-    <nav>
-        <ul class="flex gap-6">
-            <li>
-                <a href="/">Home</a>
-            </li>
-            <li>
-                <a href="/about">About</a>
-            </li>
-            <li>
-                <a href="/contact">Contact</a>
-            </li>
-        </ul>
-    </nav>
-</header>
 
 <main class="flex h-full flex-1 gap-3 justify-evenly overflow-hidden flex-col xl:flex-row">
     <OptionSelector 
