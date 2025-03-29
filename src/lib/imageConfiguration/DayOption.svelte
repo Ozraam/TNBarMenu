@@ -19,6 +19,10 @@
 		class: string;
 	} = $props();
 
+	/**
+	 * Effect block to ensure that if the first space is not used,
+	 * the second space is also not used.
+	 */
 	$effect(() => {
 		if (!space[0].is_used) {
 			space[1].is_used = false;

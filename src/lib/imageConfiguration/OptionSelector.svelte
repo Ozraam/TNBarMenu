@@ -16,6 +16,10 @@
 	let contentDiv = $state<HTMLElement | null>(null);
 	let weekOption: { label: string; space: DayOptions[] }[] = $state([]);
 
+	/**
+	 * Sets up the week options based on the provided data.
+	 * @param data - The data containing header and content for each day.
+	 */
 	function setupWeekOption(data: { header: string[]; content: any[] }) {
 		weekOption = data['header'].map((day: string, index: number) => {
 			let space : any[] = data['content'][index]['content'].map((space: any) => {
@@ -94,13 +98,17 @@
 		return mealList.find((mealOption: any) => mealOption.image === meal)?.name || '';
 	}
 
+	/**
+	 * Converts the week options to a CLI command string.
+	 * @returns The CLI command string.
+	 */
 	function weekOptionToCLI() {
 		let cli = `--header ${weekOption
 			.map((day) => {
 				return day.label;
 			})
 			.join(
-				' '
+					' '
 			)} --custom-text-french "${customTextFrench}" --custom-text-english "${customTextEnglish}" `;
 
 		cli += weekOption
@@ -120,6 +128,9 @@
 		return cli;
 	}
 
+	/**
+	 * Generates images based on the current week options.
+	 */
 	function generateImage() {
 		let cli = weekOptionToCLI();
 		fetch('http://localhost:5000/generateImages?menu=' + cli, {
