@@ -9,7 +9,7 @@
 
     let customOpen = $state(true);
 
-    let customClass = $derived(customOpen ? "p-3 h-full" : "h-8 p-0 overflow-hidden")
+    let customClass = $derived(customOpen ? "p-3 h-full" : "h-8 p-0 overflow-hidden xl:overflow-auto")
 
     let mailText = $state("");
 

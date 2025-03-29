@@ -5,6 +5,7 @@
         label,
         options,
         selected = $bindable(),
+		class: classes = "w-full",
     } : {
         key: string;
         label: string;
@@ -13,12 +14,13 @@
             label: string;
         }[];
         selected: string | undefined;
+		class: string;
     } = $props();
 
 	let selectedValue = $state();
 </script>
 
-<div class="w-full max-w-sm min-w-[200px]">
+<div class="w-full min-w-[200px] {classes}">
 	<label class="mb-1 block text-sm" for="{key}"> {label} </label>
 
 	<div class="relative">

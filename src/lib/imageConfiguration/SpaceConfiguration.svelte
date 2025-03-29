@@ -44,6 +44,7 @@
                     };
                 })}
                 bind:selected={space.meal}
+                class="w-full"
             />
         {:else}
             <Textarea

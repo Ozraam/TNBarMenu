@@ -12,7 +12,8 @@
 		onclick = () => {},
 		imageGeneratedCallback = () => {}
 	} = $props();
-
+	
+	let contentDiv = $state<HTMLElement | null>(null);
 	let weekOption: { label: string; space: DayOptions[] }[] = $state([]);
 
 	function setupWeekOption(data: { header: string[]; content: any[] }) {
@@ -135,10 +136,13 @@
 			}
 		});
 		onclick();
+		contentDiv?.scrollTo(0, 0);
 	}
+
 </script>
 
 <div
+	bind:this={contentDiv}
 	class="rounded-lg border border-gray-100 bg-gray-600/20 bg-clip-padding backdrop-blur-md backdrop-filter {class_}"
 >
 	{@render children()}
@@ -149,18 +153,20 @@
 		<WeekIndication />
 	</div>
 
-	{#each weekOption as dayOption, i}
-		<DayOption
-			label={dayOption.label}
-			key={dayOption.label}
-			bind:space={dayOption.space}
-			{mealList}
-		/>
+		{#each weekOption as dayOption, i}
+			<DayOption
+				label={dayOption.label}
+				key={dayOption.label}
+				bind:space={dayOption.space}
+				{mealList}
+				class="w-full"
+			/>
 
-		{#if i < weekOption.length - 1}
-			<div class="border-t border-white/25"></div>
-		{/if}
-	{/each}
+			{#if i < weekOption.length - 1}
+				<div class="border-t border-white/25"></div>
+			{/if}
+		{/each}
+	
 
 	<button
 		onclick={() => {
