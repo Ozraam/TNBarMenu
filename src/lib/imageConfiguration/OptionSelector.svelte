@@ -22,6 +22,8 @@
 	 */
 	function setupWeekOption(data: { header: string[]; content: any[] }) {
 		weekOption = data['header'].map((day: string, index: number) => {
+			console.log(data);
+			
 			let space : any[] = data['content'][index]['content'].map((space: any) => {
 				return {
 					is_used: true,
