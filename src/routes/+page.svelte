@@ -58,7 +58,7 @@
     >
         <div class="w-full xl:hidden">
             <button class="w-full cursor-pointer hover:underline" onclick="{() => customOpen = !customOpen}">
-                {customOpen ? "Close" : "Open"}
+                {customOpen ? "Close for less surprise" : "Open for a surprise"}
             </button>
         </div>
     </OptionSelector>

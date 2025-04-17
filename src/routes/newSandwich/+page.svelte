@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { classList } from '$lib/classList';
-	import Textarea from '$lib/simpleComponent/Textarea.svelte';
-	import Checkbox from '$lib/simpleComponent/Checkbox.svelte';
 	import { onMount } from 'svelte';
+	
+	// Import our new components
+	import SandwichBasicInfo from '$lib/sandwichForm/SandwichBasicInfo.svelte';
+	import SandwichImageUpload from '$lib/sandwichForm/SandwichImageUpload.svelte';
+	import SandwichDescription from '$lib/sandwichForm/SandwichDescription.svelte';
+	import FormMessage from '$lib/sandwichForm/FormMessage.svelte';
 
 	// Form state
 	let sandwichName = $state('');
@@ -36,23 +40,6 @@
 			}
 		} catch (error) {
 			console.error('Failed to fetch existing sandwiches:', error);
-		}
-	}
-
-	function handleImageUpload(event: Event) {
-		const input = event.target as HTMLInputElement;
-		if (input.files && input.files[0]) {
-			const file = input.files[0];
-			uploadedImage = file;
-
-			// Create preview
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				if (e.target) {
-					imagePreview = e.target.result as string;
-				}
-			};
-			reader.readAsDataURL(file);
 		}
 	}
 
@@ -156,93 +143,30 @@
 		<form onsubmit={handleSubmit} class="space-y-6">
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div class="space-y-4">
-					<!-- Sandwich name -->
-					<div>
-						<label for="sandwichName" class="block text-sm font-medium mb-1">Nom du sandwich</label>
-						<input 
-							id="sandwichName"
-							type="text"
-							bind:value={sandwichName}
-							class="ease w-full appearance-none rounded border border-slate-200 bg-transparent py-2 px-3 text-sm shadow-sm transition duration-300 placeholder:text-slate-400 hover:border-slate-400 focus:border-slate-400 focus:shadow-md focus:outline-none"
-							placeholder="Le Nouveau"
-						/>
-						{#if nameError}
-							<p class="mt-1 text-red-400 text-sm">{nameError}</p>
-						{/if}
-					</div>
-
-					<!-- Image code -->
-					<div>
-						<label for="imageCode" class="block text-sm font-medium mb-1">Code image (sans extension)</label>
-						<input 
-							id="imageCode"
-							type="text"
-							bind:value={imageCode}
-							class="ease w-full appearance-none rounded border border-slate-200 bg-transparent py-2 px-3 text-sm shadow-sm transition duration-300 placeholder:text-slate-400 hover:border-slate-400 focus:border-slate-400 focus:shadow-md focus:outline-none"
-							placeholder="Nouveau"
-						/>
-						<p class="mt-1 text-gray-400 text-xs">Ce code sera utilisé pour nommer le fichier image.</p>
-						{#if codeError}
-							<p class="mt-1 text-red-400 text-sm">{codeError}</p>
-						{/if}
-					</div>
-
-					<!-- Vegetarian checkbox -->
-					<div class="mt-4">
-						<Checkbox label="Sandwich végétarien" key="vegetarian" bind:checked={isVegetarian} />
-					</div>
-
-					<!-- Upload image -->
-					<div class="mt-4">
-						<label for="imageUpload" class="block text-sm font-medium mb-1">Télécharger une image</label>
-						<input
-							id="imageUpload"
-							type="file"
-							accept="image/png,image/jpeg"
-							onchange={handleImageUpload}
-							class="block w-full text-sm text-white
-								file:mr-4 file:py-2 file:px-4
-								file:rounded file:border-0
-								file:text-sm file:font-semibold
-								file:bg-slate-800 file:text-white
-								hover:file:bg-slate-700 cursor-pointer"
-						/>
-						<p class="mt-1 text-gray-400 text-xs">L'image doit être au format PNG avec un fond transparent.</p>
-					</div>
+					<!-- Basic info component -->
+					<SandwichBasicInfo 
+						bind:sandwichName
+						bind:imageCode
+						bind:isVegetarian
+						{nameError}
+						{codeError}
+					/>
 					
-					{#if imagePreview}
-						<div class="mt-2 border rounded-lg p-2 bg-slate-700/20">
-							<p class="text-sm mb-1">Aperçu:</p>
-							<img src={imagePreview} alt="Preview" class="max-h-40 object-contain mx-auto" />
-						</div>
-					{/if}
+					<!-- Image upload component -->
+					<SandwichImageUpload 
+						bind:uploadedImage
+						bind:imagePreview
+						{codeError}
+					/>
 				</div>
 
-				<div class="space-y-4">
-					<!-- French description -->
-					<div>
-						<label for="frenchDesc" class="block text-sm font-medium mb-1">Description française</label>
-						<Textarea 
-							key="frenchDesc"
-							label="Ingrédients en français" 
-							bind:value={frenchDescription}
-						/>
-						<p class="mt-1 text-gray-400 text-xs">Ex: jambon, fromage, tomates, salade.</p>
-						{#if descriptionError}
-							<p class="mt-1 text-red-400 text-sm">{descriptionError}</p>
-						{/if}
-					</div>
-
-					<!-- English description -->
-					<div>
-						<label for="englishDesc" class="block text-sm font-medium mb-1">Description anglaise (facultatif)</label>
-						<Textarea 
-							key="englishDesc"
-							label="Ingrédients en anglais" 
-							bind:value={englishDescription}
-						/>
-						<p class="mt-1 text-gray-400 text-xs">Ex: ham, cheese, tomatoes, salad.</p>
-					</div>
+				<div>
+					<!-- Description component -->
+					<SandwichDescription 
+						bind:frenchDescription
+						bind:englishDescription
+						{descriptionError}
+					/>
 				</div>
 			</div>
 
@@ -269,11 +193,7 @@
 			</div>
 
 			<!-- Form message -->
-			{#if formMessage.text}
-				<div class="mt-4 p-3 rounded-lg {formMessage.type === 'success' ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
-					{formMessage.text}
-				</div>
-			{/if}
+			<FormMessage message={formMessage} />
 		</form>
 	</div>
 
