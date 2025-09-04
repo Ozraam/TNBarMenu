@@ -79,8 +79,16 @@ jobs:
 
     - name: Test with Docker Compose
       run: |
-        docker compose build
-        docker compose up -d
+        # Debug: Show current directory and files
+        pwd
+        ls -la
+        echo "Checking for Dockerfiles..."
+        ls -la Dockerfile
+        ls -la MenuGeneratorBarbare/Dockerfile
+        
+        # Build with explicit context
+        docker compose -f docker-compose.yml build --no-cache
+        docker compose -f docker-compose.yml up -d
         sleep 30
         
         # Test frontend
@@ -89,7 +97,7 @@ jobs:
         # Test backend
         curl -f http://localhost:5000/getMealList || exit 1
         
-        docker compose down
+        docker compose -f docker-compose.yml down
 
   security-scan:
     runs-on: ubuntu-latest
