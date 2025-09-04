@@ -4,7 +4,7 @@ FROM oven/bun:1 AS build
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and bun.lockb
 COPY package*.json ./
 COPY bun.lockb ./
 
@@ -15,17 +15,22 @@ RUN bun install
 COPY . .
 
 # Build the Svelte app
-RUN bun --bun run build
+RUN bun run build
 
+# Production stage
 FROM oven/bun:1
 WORKDIR /app
 
-COPY --from=build /app/build .
+# Copy the built application from build stage
+# SvelteKit with Bun adapter creates the build output in the build directory
+COPY --from=build /app/build ./
+COPY --from=build /app/package.json ./
 
-RUN bun install
+# Install only production dependencies
+RUN bun install --production
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Command to run the app
-CMD ["bun", "index.js"] 
+CMD ["bun", "index.js"]
