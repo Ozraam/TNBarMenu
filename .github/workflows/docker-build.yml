@@ -55,11 +55,27 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
 
+    - name: Debug file structure
+      run: |
+        echo "=== Current directory ==="
+        pwd
+        echo "=== Root directory contents ==="
+        ls -la
+        echo "=== Frontend Dockerfile ==="
+        ls -la Dockerfile
+        echo "=== Backend directory ==="
+        ls -la MenuGeneratorBarbare/
+        echo "=== Backend Dockerfile ==="
+        ls -la MenuGeneratorBarbare/Dockerfile
+        echo "=== Checking Docker buildx ==="
+        docker buildx version
+
     - name: Build and push frontend image
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./Dockerfile
+        file: Dockerfile
+        platforms: linux/amd64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta-frontend.outputs.tags }}
         labels: ${{ steps.meta-frontend.outputs.labels }}
@@ -69,13 +85,27 @@ jobs:
     - name: Build and push backend image
       uses: docker/build-push-action@v5
       with:
-        context: ./MenuGeneratorBarbare
-        file: ./MenuGeneratorBarbare/Dockerfile
+        context: MenuGeneratorBarbare
+        file: MenuGeneratorBarbare/Dockerfile
+        platforms: linux/amd64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta-backend.outputs.tags }}
         labels: ${{ steps.meta-backend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+
+    - name: Fallback - Build images with regular Docker (if buildx fails)
+      if: failure()
+      run: |
+        echo "Buildx failed, trying regular Docker build..."
+        
+        # Build frontend
+        docker build -t temp-frontend .
+        
+        # Build backend  
+        docker build -t temp-backend MenuGeneratorBarbare/
+        
+        echo "Regular Docker build completed successfully"
 
     - name: Test with Docker Compose
       run: |
